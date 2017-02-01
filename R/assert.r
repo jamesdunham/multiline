@@ -1,0 +1,42 @@
+assert_that <- assertthat::assert_that
+is.count <- assertthat::is.count
+is.scalar <- assertthat::is.scalar
+is.string <- assertthat::is.string
+on_failure <- assertthat::on_failure
+
+is_even_split <- function(split_ds) {
+  n_records = unique(vapply(split_ds, nrow, integer(1)))
+  length(n_records) == 1
+}
+
+on_failure(is_even_split) <- function(call, env) {
+  paste("'rows' argument leads to inconsistent split")
+}
+
+length_is_row_multiple <- function(ds_len, rows) {
+  ds_len %% rows == 0
+}
+
+on_failure(length_is_row_multiple) <- function(call, env) {
+  paste("rows in source are not a multiple of 'rows' argument")
+}
+
+is_min_length <- function(ds_len, rows) {
+  ds_len >= rows 
+}
+
+on_failure(is_min_length) <- function(call, env) {
+  stop("fewer rows in source than given in 'rows' argument")
+}
+
+# move this to col_positions_valid and col_types_valid:
+  if (rows > 1) {
+    stopifnot(length(col_positions) == rows)
+    if (!is.null(col_types)) {
+      stopifnot(length(col_types) == rows)
+    }
+  } else {
+    col_positions = list(col_positions)
+    col_types = list(col_types)
+  }
+

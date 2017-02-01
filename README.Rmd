@@ -1,9 +1,24 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+```{r, knitr-options, echo = FALSE}
+# rmarkdown::render("README.Rmd")
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README/",
+  cache = FALSE)
+```
+
 # multiline
 
 multiline is an R package for reading data from multiline fixed-width-formatted
 (FWF) files. This format is like that of typical FWF files, except that data for
 a given observation wraps after some number of columns.
-
 
 ## Background
 
@@ -69,7 +84,7 @@ cat(d)
 columns.
 
 ```{r}
-tidy <- read_mfwf(d, positions)
+tidy <- read_multiline(d, positions)
 tidy
 ```
 
@@ -78,8 +93,8 @@ tidy
 
 Install from GitHub with devtools:
 
-```{r}
+```{r, eval = FALSE}
 # install.packagaes("devtools")
-# devtools::install_github("jamesdunham/multifwf")
+devtools::install_github("jamesdunham/multiline")
 ```
 

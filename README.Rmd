@@ -94,7 +94,7 @@ tidy
 Install from GitHub with devtools:
 
 ```{r, eval = FALSE}
-# install.packagaes("devtools")
+# install.packages("devtools")
 devtools::install_github("jamesdunham/multiline")
 ```
 

@@ -50,8 +50,8 @@ shows these observation identifiers in parentheses.
 
 Because line numbers in MFWF data are inferred (just as column numbers in FWF
 data), lines must appear whether or not they contain data. The updated example
-below shows how the data would look if `field2` were missing for observation
-1. The parentheses give line numbers.
+below shows how the data would look if `field2` were missing for observation 1.
+The parentheses give line numbers.
 
 ```
 123456789  (1)
@@ -63,13 +63,15 @@ below shows how the data would look if `field2` were missing for observation
 
 ## Usage
 
-We can represent field positions in a dataframe whose columns give names, line
-positions, and column positions. If `field1` is in line 1, columns 1-9, and
-`field2` is in line 2, columns 1-3, then:
+We can represent MFWF field positions in a list that contains for each line a
+table with its fields' names and start and end positions. The `fwf_positions`
+function from `readr` makes this makes this easy. For example, if `field1` is in
+line 1, columns 1-9, and `field2` is in line 2, columns 1-3, then:
 
-```
-positions <- data.frame(field = c("field1", "field2"), line = c(1, 2), col_start
-  = c(1, 1), col_end = c(9, 3))
+```{r}
+positions = list(
+  readr::fwf_positions(start = 1, end = 9, col_names = 'field1'),
+  readr::fwf_positions(start = 1, end = 3, col_names = 'field2'))
 positions
 ```
 
@@ -77,14 +79,13 @@ Given the data:
 
 ```{r}
 d <- "123456789\n789\n123456789\n789"
-cat(d)
 ```
 
-`read_mfwf()` returns a tidy table with observations in rows and fields in
+`read_multiline()` returns a tidy table with observations in rows and fields in
 columns.
 
 ```{r}
-tidy <- read_multiline(d, positions)
+tidy <- read_multiline(d, lines=2, positions)
 tidy
 ```
 

@@ -13,15 +13,14 @@
 #' @examples
 #' NULL
 read_multiline = function(file, lines, col_positions, col_types = NULL, skip
-  = 0, ...) {
-  assert_that(is.readable(file))
+  = 0) {
   assert_that(is.count(lines))
-  assert_that(is.string(col_types))
   assert_that(is.scalar(skip))
-  assert_that(positions_valid(col_positions, lines))
-  assert_that(types_valid(col_types, lines))
+  assert_that(is.list(col_positions))
+  assert_that(length(col_positions) == lines)
   ds_lines <- read_lines(file, skip)
-  split_ds <- split_lines(ds_lines, lines, col_positions, col_types, ...)
+  split_ds <- split_lines(ds = ds_lines, lines = lines, positions =
+    col_positions, types = col_types)
   join_lines(split_ds)
 }
 
@@ -30,16 +29,17 @@ read_lines <- function(file, skip) {
   readr::read_lines(ds, skip = skip)
 }
 
-split_lines <- function(ds, lines, positions, types, ...) {
+split_lines <- function(ds, lines, positions, types) {
   index = index_lines(ds, lines)
-  split_ds = lapply(seq.int(lines), read_subset, ds, positions, types, index)
+  split_ds = lapply(seq.int(lines), read_subset, ds = ds, positions = positions,
+    types = types, index = index)
   assert_that(is_even_split(split_ds))
   split_ds
 }
 
 read_subset <- function(i, ds, positions, types, index) {
   r_lines = paste0(ds[index == i], collapse = "\n")
-  readr::read_fwf(r_lines, positions[[i]], types[[i]], ...)
+  readr::read_fwf(r_lines, positions[[i]], types[[i]])
 }
 
 join_lines <- function(split_ds) {

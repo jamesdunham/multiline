@@ -1,13 +1,16 @@
-Package: cardreader
+Package: multiline
 Title: Read punchcard data into R
 Version: 0.0.0.9000
 Authors@R: person("James", "Dunham", email = "james@jdunham.io", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: Read multiline fixed-width-formatted text in R.
 Depends:
     R (>= 3.3.2)
+Imports:
+    readr,
+    assertthat
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests:
     testthat
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

@@ -29,14 +29,14 @@ on_failure(is_min_length) <- function(call, env) {
   stop("fewer rows in source than given in 'rows' argument")
 }
 
-# move this to col_positions_valid and col_types_valid:
-  if (rows > 1) {
-    stopifnot(length(col_positions) == rows)
-    if (!is.null(col_types)) {
-      stopifnot(length(col_types) == rows)
-    }
-  } else {
-    col_positions = list(col_positions)
-    col_types = list(col_types)
-  }
-
+# # move this to col_positions_valid and col_types_valid:
+#   if (rows > 1) {
+#     stopifnot(length(col_positions) == rows)
+#     if (!is.null(col_types)) {
+#       stopifnot(length(col_types) == rows)
+#     }
+#   } else {
+#     col_positions = list(col_positions)
+#     col_types = list(col_types)
+#   }
+#

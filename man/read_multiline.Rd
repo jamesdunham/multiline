@@ -6,15 +6,51 @@
 \usage{
 read_multiline(file, lines, col_positions, col_types = NULL, skip = 0, ...)
 }
+\arguments{
+\item{file}{Either a path to a file, a connection, or literal data
+(either a single string or a raw vector).
+
+Files ending in \code{.gz}, \code{.bz2}, \code{.xz}, or \code{.zip} will
+be automatically uncompressed. Files starting with \code{http://},
+\code{https://}, \code{ftp://}, or \code{ftps://} will be automatically
+downloaded. Remote gz files can also be automatically downloaded and
+decompressed.
+
+Literal data is most useful for examples and tests. It must contain at
+least one new line to be recognised as data (instead of a path).}
+
+\item{col_positions}{Column positions, as created by \code{\link[=fwf_empty]{fwf_empty()}},
+\code{\link[=fwf_widths]{fwf_widths()}} or \code{\link[=fwf_positions]{fwf_positions()}}. To read in only selected fields,
+use \code{\link[=fwf_positions]{fwf_positions()}}. If the width of the last column is variable (a
+ragged fwf file), supply the last end position as NA.}
+
+\item{col_types}{One of \code{NULL}, a \code{\link[=cols]{cols()}} specification, or
+a string. See \code{vignette("column-types")} for more details.
+
+If \code{NULL}, all column types will be imputed from the first 1000 rows
+on the input. This is convenient (and fast), but not robust. If the
+imputation fails, you'll need to supply the correct types yourself.
+
+If a column specification created by \code{\link[=cols]{cols()}}, it must contain
+one column specification for each column. If you only want to read a
+subset of the columns, use \code{\link[=cols_only]{cols_only()}}.
+
+Alternatively, you can use a compact string representation where each
+character represents one column:
+c = character, i = integer, n = number, d = double,
+l = logical, D = date, T = date time, t = time, ? = guess, or
+\code{_}/\code{-} to skip the column.}
+
+\item{skip}{Number of lines to skip before reading data.}
+
+\item{...}{Further arguments, passed to \code{\link[readr]{read_lines()}}.}
+}
 \value{
-...
+A data.frame.
 }
 \description{
 Read multiline FWF files
 }
 \examples{
 NULL
-}
-\seealso{
-...
 }

@@ -1,10 +1,26 @@
-library(testthat)
+context("read_multiline")
 
 test_data = c("12\n34\n12\n34\n")
 test_pos = readr::fwf_positions(
   start = c(1, 2),
   end = c(1, 2),
   col_names = letters[1:2])
+
+test_that("index_lines works as expected", {
+  line_vector = read_lines(test_data, skip = 0)
+  index = index_lines(line_vector, lines = 2)
+  expect_equal(index, c(1, 2, 1, 2))
+  index = index_lines(line_vector, lines = 1)
+  expect_equal(index, rep(1, 4))
+  expect_error(index_lines(line_vector, lines = 3),
+    "not a multiple")
+})
+
+test_that("read_subset works", {
+  line_vector = read_lines(test_data, skip = 0)
+  index = index_lines(line_vector, lines = 2)
+  read_subset(1, line_vector, test_pos, types = NULL, index) 
+})
 
 test_that("read_fwf and read_multiline give the same output when rows=1", {
   readr_res = readr::read_fwf(test_data, test_pos)
@@ -26,6 +42,10 @@ test_that("read_multiline concatenates row pairs when rows=2", {
 test_that("read_multiline stops on missing positions", {
   expect_error(read_multiline(test_data, lines = 2, test_pos),
     "length\\(col_positions\\) not equal to lines")
+})
+
+test_that("read_multiline accepts NA col_positions", {
+  res = read_multiline(test_data, lines = 2, list(test_pos, NA))
 })
 
 test_that("column width can vary over lines", {

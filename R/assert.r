@@ -10,7 +10,7 @@ is_even_split <- function(split_ds) {
 }
 
 on_failure(is_even_split) <- function(call, env) {
-  paste("'rows' argument leads to inconsistent split")
+  paste("could not split the datasource evenly; please report this bug")
 }
 
 length_is_row_multiple <- function(ds_len, rows) {
@@ -18,7 +18,7 @@ length_is_row_multiple <- function(ds_len, rows) {
 }
 
 on_failure(length_is_row_multiple) <- function(call, env) {
-  paste("rows in source are not a multiple of 'rows' argument")
+  paste("the datasource's line count is not a multiple of the 'lines' argument")
 }
 
 is_min_length <- function(ds_len, rows) {
@@ -26,7 +26,7 @@ is_min_length <- function(ds_len, rows) {
 }
 
 on_failure(is_min_length) <- function(call, env) {
-  stop("fewer rows in source than given in 'rows' argument")
+  stop("there are fewer lines in the datasource than implied by the 'lines' argument")
 }
 
 # # move this to col_positions_valid and col_types_valid:

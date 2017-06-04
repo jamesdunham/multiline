@@ -39,25 +39,25 @@ field.
 
 Thus another way to see MFWF data is as a "long" table (i.e., with observations
 spanning rows) whose unique identifiers are implicit. The updated example below
-shows these observation identifiers in parentheses.
+shows these observation identifiers in parentheses and line numbers in brackets.
 
 ```
-123456789  (1)
-789        (1)
-123456789  (2)
-789        (2)
+123456789  (1) [1]
+789        (1) [2]
+123456789  (2) [1]
+789        (2) [2]
 ```
 
 Because line numbers in MFWF data are inferred (just as column numbers in FWF
 data), lines must appear whether or not they contain data. The updated example
 below shows how the data would look if `field2` were missing for observation 1.
-The parentheses give line numbers.
+Again, the parentheses show observation identifiers and brackets show line numbers.
 
 ```
-123456789  (1)
-           (2)
-123456789  (1)
-789        (2)
+123456789  (1) [1]
+           (1) [2]
+123456789  (2) [1]
+789        (2) [2]
 ```
 
 
@@ -75,6 +75,10 @@ positions = list(
 positions
 ```
 
+The first table in the list "positions" gives the column positions of fields 
+in the first line of the data, and the second table in the list "positions" 
+gives the column positions of fields in the second line of the data. 
+
 Given the data:
 
 ```{r}
@@ -83,6 +87,8 @@ d <- "123456789\n789\n123456789\n789"
 
 `read_multiline()` returns a tidy table with observations in rows and fields in
 columns.
+Note that `read_multiline()` requires that the number of items in the list of 
+positions exactly matches the number of lines in the MFWF. 
 
 ```{r}
 tidy <- read_multiline(d, lines=2, positions)

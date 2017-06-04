@@ -23,7 +23,7 @@ a given observation wraps after some number of columns.
 ## Background
 
 Consider the following multiline FWF (MFWF) data. As with FWF data, parsing
-requires the column positions of each field. But furthermore, we need the line
+requires the column positions of each field (ie, variable). But furthermore, we need the line
 position of each field.
 
 ```
@@ -75,20 +75,40 @@ positions = list(
 positions
 ```
 
-The first table in the list "positions" gives the column positions of fields 
-in the first line of the data, and the second table in the list "positions" 
-gives the column positions of fields in the second line of the data. 
+The lines in which questions can be found is implicit in the order of the list of positions. 
+Thus, the first table in `positions` gives the column positions of fields 
+in the first line of the data, and the second table gives the column positions of fields 
+in the second line of the data. 
+
+fwf_positions also accepts vectors of start and end positions when a line contains
+multiple fields. For the example updated below, `field3` is contained in 
+columns 4-7 of line 2. 
+
+```
+123456789  (1) [1]
+7891011    (1) [2]
+123456789  (2) [1]
+7891011    (2) [2]
+```
+
+To parse these data:
+```{r}
+positions = list(
+  readr::fwf_positions(start = 1, end = 9, col_names = 'field1'),
+  readr::fwf_positions(start = c(1,4), end = c(3,7), col_names = c('field2','field3')))
+positions
+```
 
 Given the data:
 
 ```{r}
-d <- "123456789\n789\n123456789\n789"
+d <- "123456789\n7891011\n123456789\n7891011"
 ```
 
 `read_multiline()` returns a tidy table with observations in rows and fields in
 columns.
 Note that `read_multiline()` requires that the number of items in the list of 
-positions exactly matches the number of lines in the MFWF. 
+positions exactly match the number of lines in the MFWF. 
 
 ```{r}
 tidy <- read_multiline(d, lines=2, positions)

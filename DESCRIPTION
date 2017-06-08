@@ -1,8 +1,8 @@
 Package: multiline
-Title: Read punchcard data into R
+Title: An R package for reading multiline FWF files
 Version: 0.0.0.9000
 Authors@R: person("James", "Dunham", email = "james@jdunham.io", role = c("aut", "cre"))
-Description: Read multiline fixed-width-formatted text in R.
+Description: Read multiline fixed-width-formatted (e.g., punchcard) data into R.
 Depends:
     R (>= 3.3.2)
 Imports:

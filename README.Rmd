@@ -40,7 +40,9 @@ devtools::install_github("jamesdunham/multiline")
 
 ## Background
 
-Consider the following multiline FWF (MFWF) data. 
+Consider the following multiline FWF (MFWF) data. As with FWF data, parsing
+requires the column positions of each field (ie, variable). But furthermore, we need the line
+position of each field.
 
 ```
 123456789
@@ -125,6 +127,8 @@ d
 
 `read_multiline()` returns a tidy table with observations in rows and fields in
 columns.
+Note that `read_multiline()` requires that the number of items in the list of 
+positions exactly match the number of lines in the MFWF. 
 
 ```{r}
 tidy <- read_multiline(d, lines = 2, positions)

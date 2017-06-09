@@ -97,7 +97,7 @@ positions
 ```
 
 The line position of each field is implicit in the list order. Here, `field1`
-and `field2` are in line 1 and `field2` is in line 2.
+and `field2` are in line 1 and `field3` is in line 2.
 
 <!-- Alternatively, as a table:
 

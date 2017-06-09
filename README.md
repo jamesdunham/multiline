@@ -74,7 +74,7 @@ positions
 #> 1     0     3    field3
 ```
 
-The line position of each field is implicit in the list order. Here, `field1` and `field2` are in line 1 and `field2` is in line 2.
+The line position of each field is implicit in the list order. Here, `field1` and `field2` are in line 1 and `field3` is in line 2.
 
 <!-- Alternatively, as a table:
 

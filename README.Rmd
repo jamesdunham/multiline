@@ -18,13 +18,15 @@ knitr::opts_chunk$set(
 
 multiline is an R package for reading data from multiline fixed-width-formatted
 (FWF) files. This format is like that of typical FWF files, except that data for
-a given observation wraps after some number of columns.
+a given observation wraps after some number of columns to span a fixed number of
+rows.
 
 Digitized punch card data are often found in multiline FWF format. If data for
 each observation exceeded the horizontal space on a card (conventionally 80
 columns), additional decks of cards were used. When digitized, their rows were
-were interleaved so that data for each observation would appear in consecutive
-rows, one per card.
+were often interleaved so that data for each observation would appear in
+consecutive rows, one for each card.
+
 
 ## Installation
 
@@ -35,81 +37,96 @@ if (!require(devtools, quietly = TRUE)) install.packages("devtools")
 devtools::install_github("jamesdunham/multiline")
 ```
 
+
 ## Background
 
-Consider the following multiline FWF (MFWF) data. As with FWF data, parsing
-requires the column positions of each field. But because observations wrap
-across lines, parsing also requires the *line* position of each field.
+Consider the following multiline FWF (MFWF) data. 
 
 ```
 123456789
-789
-123456789
-789
+789      
+987654321
+987      
 ```
 
-If `field1` appears in columns 1-9 of line 1 and `field2` is in columns 1-3 of
-line 2, then the data give two observations with identical values for each
-field.
+Parsing requires:
 
-Thus another way to see MFWF data is as a "long" table (i.e., with observations
-spanning rows) whose unique identifiers are implicit. Below these observation
-identifiers are in parentheses.
+- The column positions of each field, as with FWF data;
+- The number of lines per observation; and
+- The line position of each field.
 
-```
-123456789  (obs. 1)
-789        (obs. 1)
-123456789  (obs. 2)
-789        (obs. 2)
-```
-
-In a MFWF file, lines appear whether or not they contain data. Below, `field2`
-were missing for the first observation. The parentheses give line numbers.
+Suppose there are 2 lines per observation in the data; `field1` occupies columns
+1-4 of line 1; `field2` columns 5-9 of line 1; and `field3` columns 1-3 of line
+2.
 
 ```
-123456789  (line 1)
-           (line 2)
-123456789  (line 1)
-789        (line 2)
+123456789  [line 1, obs. 1]
+789        [line 2, obs. 1]
+987654321  [line 1, obs. 2]
+987        [line 2, obs. 2]
+```
+
+The purpose of multiline is reading this data into a tidy table:
+
+```
+obs field 1  field 2  field 3
+  1    1234    56789      789
+  2    9876    54321      987
 ```
 
 ## Usage
 
-Specify the column and line positions of each field in a table with four
-columns: `start` and `end` column numbers, `line` number, and field `name`.
-Example:
+Specify the column and line positions of each field in a table or list of
+tables. multiline imports the [`fwf_` functions](http://readr.tidyverse.org/reference/read_fwf.html)
+from [`readr`](http://readr.tidyverse.org/index.html) to help with this task.
 
 # TODO: package example data
 > https://www.ropercenter.cornell.edu/CFIDE/cf/action/catalog/abstract.cfm?type=&start=&id=&archno=USRCOM1940-012&abstract=
 
-The [`fwf_` functions](http://readr.tidyverse.org/reference/read_fwf.html) from
-[`readr`](http://readr.tidyverse.org/index.html) make creating a positions
-table easy.
-
-For example, if `field1` is in
-line 1, columns 1-9, and `field2` is in line 2, columns 1-3, then:
+As a list:
 
 ```{r}
-library(readr)
-library(dplyr)
-positions = list(
-  fwf_positions(start = 1, end = 9, col_names = 'field1'),
-  fwf_positions(start = 1, end = 3, col_names = 'field2')) %>%
-  bind_rows()
+positions <- list(
+  fwf_positions(start = c(1, 5), end = c(4, 9), col_names = c('field1', 'field2')),
+  fwf_positions(start = 1, end = 3, col_names = 'field3'))
 positions
 ```
 
-Here's some MFWF data:
-# TODO: package example data
+The line position of each field is implicit in the list order. Here, `field1`
+and `field2` are in line 1 and `field2` is in line 2.
+
+<!-- Alternatively, as a table:
 
 ```{r}
-d <- "123456789\n789\n123456789\n789"
+# TODO: not yet implemented
+# positions <- bind_positions(
+#   fwf_positions(start = c(1, 5), end = c(4, 9), col_names = c('field1', 'field2')),
+#   fwf_positions(start = 1, end = 3, col_names = 'field3'))
+# positions
+#
+# Basically this:
+# library(dplyr)
+# positions = list(
+#     fwf_positions(start = 1, end = 9, col_names = 'field1'),
+#     fwf_positions(start = 1, end = 3, col_names = 'field2')) %>%
+#   bind_rows(.id = 'line') # %>%
+#   mutate(line = as.integer(line))
 ```
 
-The result is a tidy table.
+The table should give `start` and `end` column positions, `line` positions, and
+the name of each field in `col_names`. -->
+
+Given the data:
+
+```{r}
+d <- "123456789\n789\n987654321\n9871"
+d
+```
+
+`read_multiline()` returns a tidy table with observations in rows and fields in
+columns.
 
 ```{r}
 tidy <- read_multiline(d, lines = 2, positions)
 tidy
 ```
-

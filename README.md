@@ -49,11 +49,10 @@ Usage
 
 Specify the column and line positions of each field in a table or list of tables. multiline imports the [`fwf_` functions](http://readr.tidyverse.org/reference/read_fwf.html) from [`readr`](http://readr.tidyverse.org/index.html) to help with this task.
 
+<!--
 TODO: package example data
-==========================
-
-> <https://www.ropercenter.cornell.edu/CFIDE/cf/action/catalog/abstract.cfm?type>=&start=&id=&archno=USRCOM1940-012&abstract=
-
+https://www.ropercenter.cornell.edu/CFIDE/cf/action/catalog/abstract.cfm?type=&start=&id=&archno=USRCOM1940-012&abstract=
+-->
 As a list:
 
 ``` r
